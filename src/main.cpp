@@ -8,8 +8,10 @@ Throttle *throttle;
 void setup() {
   Serial.begin(115200);
 
+  analogReference(EXTERNAL);
+
   display = new OLED();
-  throttle = new Throttle(A0, 0, 380, 760);
+  throttle = new Throttle(A0, 0, 512, 1023);
 }
 
 void loop() {
