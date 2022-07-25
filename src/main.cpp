@@ -1,9 +1,14 @@
 #include <Arduino.h>
+#include "OLED.h"
+
+OLED *display;
 
 void setup() {
-  // put your setup code here, to run once:
+  Serial.begin(115200);
+
+  display = new OLED();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  display->drawUI();
 }
