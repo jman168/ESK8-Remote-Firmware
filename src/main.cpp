@@ -12,8 +12,9 @@ float getBattery();
 void setup() {
   Serial.begin(115200);
 
-  pinMode(BATTERY_PIN, INPUT);
+  analogReference(EXTERNAL);
 
+  pinMode(BATTERY_PIN, INPUT);
 
   display = new OLED();
   throttle = new Throttle(A0, 0, 512, 1023);
@@ -26,9 +27,14 @@ void loop() {
 }
 
 float getBattery() {
-  int value = analogRead(BATTERY_PIN);
+  float total = 0;
+  for(int i = 0; i < 10; i++) {
+    total += analogRead(BATTERY_PIN);
+  }
+  float value = total / 10.0;
+  
   Serial.println(value);
-  float voltage = (value/1023.0)*5.0;
+  float voltage = (value/1023.0)*3.3*2.0;
   Serial.println(voltage);
 
   if(voltage < 3.3)
