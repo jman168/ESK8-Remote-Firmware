@@ -12,7 +12,6 @@ Throttle::Throttle(uint8_t pin, float min, float center, float max, float deadZo
 
 float Throttle::getRawThrottle() {
     int value = analogRead(_pin);
-    Serial.println(value);
     
     if(value > _center) {
         return (value-_center)/(float)(_max-_center);
