@@ -51,10 +51,10 @@ float getBattery() {
   }
   float value = total / 10.0;
   
-  float voltage = (value/1023.0)*3.3*2.0;
+  float voltage = (value/1023.0)*3.43*2.0;
 
-  if(voltage < 3.3)
+  if(voltage < 3.0)
     return 0.0;
 
-  return (voltage-3.3)/(4.2-3.3);
+  return (voltage-3.0)/(4.2-3.0);
 }
