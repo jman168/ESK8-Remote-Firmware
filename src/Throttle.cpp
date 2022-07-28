@@ -24,9 +24,9 @@ float Throttle::getRawThrottle() {
     float value = getReading();
     
     if(value > _center) {
-        return (value-_center)/(float)(_max-_center);
+        return -(value-_center)/(float)(_max-_center);
     } else {
-        return -(1.0-((value-_min)/(float)(_center-_min)));
+        return (1.0-((value-_min)/(float)(_center-_min)));
     }
 }
 
