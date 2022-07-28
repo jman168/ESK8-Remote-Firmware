@@ -6,12 +6,8 @@ OLED::OLED() {
     
     _display.clearDisplay(); // clear the buffer
     
-    drawSplashScreen(); // show splash screen
-    
-    delay(2500); // wait 2.5 seconds
-    
+    drawSplashScreen(); // show splash screen    
     _display.clearDisplay(); // clear buffer
-    _display.display(); // show empty buffer
 }
 
 void OLED::drawSplashScreen() {
