@@ -5,9 +5,14 @@ Board::Board() {
 
     if(!_radio->begin()) {
         Serial.println("Radio hardware is not responding!!");
+        while(true) {}
     }
 
-    _radio->setPALevel(RF24_PA_HIGH);
+    _radio->setDataRate(RF24_250KBPS);
+
+    _radio->setChannel(50);
+
+    _radio->setPALevel(RF24_PA_LOW);
 
     _radio->enableDynamicPayloads();
 
@@ -28,6 +33,7 @@ void Board::handle() {
         ControlPacket txPacket;
         txPacket.throttle = _throttle;
         bool ret = _radio->write(&txPacket, sizeof(txPacket));
+        _lastTransmit = time;
         
         uint8_t pipe;
         if(ret) {
@@ -39,7 +45,8 @@ void Board::handle() {
                 _battery = ackPacket.battery;
             }
         } else {
-            Serial.println("Transmission failed or timed out");
+            Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+            _radio->printPrettyDetails();
         }
     }
 }
