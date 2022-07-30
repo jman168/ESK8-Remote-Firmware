@@ -1,7 +1,8 @@
 #pragma once 
 
 #include <SPI.h>
-#include "RF24.h"
+#include <ESP8266WiFi.h>
+#include <espnow.h>
 
 /**
  * @brief Initializes radio communication with the board.
