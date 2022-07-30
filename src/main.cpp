@@ -7,7 +7,6 @@
 
 OLED *display;
 Throttle *throttle;
-Board *board;
 
 FILE f_out;
 int sput(char c, __attribute__((unused)) FILE* f) {return !Serial.write(c);}
@@ -27,20 +26,20 @@ void setup() {
   pinMode(BATTERY_PIN, INPUT);
 
   display = new OLED();
-  board = new Board();
+  board_init();
   throttle = new Throttle(A0);
 }
 
 void loop() {
   float t = throttle->getThrottle();
 
-  board->setThrottle(t);
-  board->handle();
+  board_set_throttle(t);
+  board_update();
 
   display->setThrottle(throttle->getThrottle());
   display->setRemoteBattery(getBattery());
-  display->setBoardBattery(board->getBattery());
-  display->setSpeed(board->getSpeed());
+  display->setBoardBattery(board_get_battery());
+  display->setSpeed(board_get_speed());
   display->drawUI();
 }
 
