@@ -5,7 +5,6 @@
 
 #define BATTERY_PIN A7
 
-OLED *display;
 Throttle *throttle;
 
 FILE f_out;
@@ -25,7 +24,7 @@ void setup() {
 
   pinMode(BATTERY_PIN, INPUT);
 
-  display = new OLED();
+  OLED_init();
   board_init();
   throttle = new Throttle(A0);
 }
@@ -36,11 +35,11 @@ void loop() {
   board_set_throttle(t);
   board_update();
 
-  display->setThrottle(throttle->getThrottle());
-  display->setRemoteBattery(getBattery());
-  display->setBoardBattery(board_get_battery());
-  display->setSpeed(board_get_speed());
-  display->drawUI();
+  OLED_set_throttle(throttle->getThrottle());
+  OLED_set_remote_battery(getBattery());
+  OLED_set_board_battery(board_get_battery());
+  OLED_set_board_speed(board_get_speed());
+  OLED_draw_ui();
 }
 
 float getBattery() {

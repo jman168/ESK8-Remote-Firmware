@@ -4,38 +4,48 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-class OLED {
-    public:
-        OLED();
+/**
+ * @brief Initializes the OLED screen.
+ * 
+ */
+void OLED_init();
 
-        /**
-         * @brief Draws and displays the splash screen
-         * 
-         */
-        void drawSplashScreen();
+/**
+ * @brief Draws the custom splash screen to the OLED.
+ * 
+ */
+void OLED_draw_splash_screen();
 
-        /**
-         * @brief Draws and displays the UI with all the important info
-         * 
-         */
-        void drawUI();
-        
-        void setBoardBattery(float level);
-        void setRemoteBattery(float level);
-        void setThrottle(float level);
+/**
+ * @brief Draws one frame of the UI according to current data.
+ * 
+ */
+void OLED_draw_ui();
 
-        /**
-         * @brief Set the Speed object
-         * 
-         * @param speed 
-         */
-        void setSpeed(float speed);
+/**
+ * @brief Sets the boards battery level from 0.0 to 1.0
+ * 
+ * @param level 
+ */
+void OLED_set_board_battery(float level);
 
-    private:
-        float _boardBattery = 0.0;
-        float _remoteBattery = 0.0;
-        float _throttle = 0.0;
-        float _speed = 0.0;
+/**
+ * @brief Sets the boards speed in miles per hour.
+ * 
+ * @param speed 
+ */
+void OLED_set_board_speed(float speed);
 
-        Adafruit_SSD1306 _display;
-};
+/**
+ * @brief Sets the remotes battery level from 0.0 to 1.0
+ * 
+ * @param level 
+ */
+void OLED_set_remote_battery(float level);
+
+/**
+ * @brief Sets the throttle input from -1.0 to 1.0
+ * 
+ * @param throttle 
+ */
+void OLED_set_throttle(float throttle);
