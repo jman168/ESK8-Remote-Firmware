@@ -2,16 +2,25 @@
 
 #include <Arduino.h>
 
-class Throttle {
-    public: 
-        Throttle(uint8_t pin, float deadZone = 0.05);
+#define THROTTLE_PIN A0
+#define THROTTLE_DEAD_ZONE 0.05
 
-        float getRawThrottle();
-        float getThrottle();
+/**
+ * @brief Initialized the throttle potentiometer.
+ * 
+ */
+void throttle_init();
 
-    private:
-        float getReading();
+/**
+ * @brief Gets raw scaled throttle readings.
+ * 
+ * @return float 
+ */
+float throttle_get_raw_throttle();
 
-        float _min, _center, _max, _deadZone;
-        uint8_t _pin;
-};
+/**
+ * @brief Gets throttle with dead zones applied.
+ * 
+ * @return float 
+ */
+float throttle_get_throttle();

@@ -5,8 +5,6 @@
 
 #define BATTERY_PIN A7
 
-Throttle *throttle;
-
 FILE f_out;
 int sput(char c, __attribute__((unused)) FILE* f) {return !Serial.write(c);}
 
@@ -27,16 +25,16 @@ void setup() {
   OLED_init();
   OLED_draw_splash_screen();
   board_init();
-  throttle = new Throttle(A0);
+  throttle_init();
 }
 
 void loop() {
-  float t = throttle->getThrottle();
+  float t = throttle_get_throttle();
 
   board_set_throttle(t);
   board_update();
 
-  OLED_set_throttle(throttle->getThrottle());
+  OLED_set_throttle(t);
   OLED_set_remote_battery(getBattery());
   OLED_set_board_battery(board_get_battery());
   OLED_set_board_speed(board_get_speed());

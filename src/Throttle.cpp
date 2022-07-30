@@ -1,51 +1,50 @@
 #include "Throttle.h"
 
-Throttle::Throttle(uint8_t pin, float deadZone = 0.05) {
-    _pin = pin;
-    
-    pinMode(_pin, INPUT);
-    
-    _center = getReading();
-    
-    _max = _center;
-    _min = _center;
+float throttle_min, throttle_center, throttle_max;
 
-    float reading = getReading();
-    while((_max < _center+20) || (_min > _center-20) || (abs(reading-_center) > 10)) {
-        reading = getReading();
-        _min = min(_min, reading);
-        _max = max(_max, reading);
+float throttle_get_reading() {
+    float total = 0;
+    for(int i = 0; i < 10; i++) {
+        total += analogRead(THROTTLE_PIN);
     }
-
-    _deadZone = deadZone;
+    float value = total / 10.0;
+    return value;
 }
 
-float Throttle::getRawThrottle() {
-    float value = getReading();
+void throttle_init() {    
+    pinMode(THROTTLE_PIN, INPUT);
     
-    if(value > _center) {
-        return -(value-_center)/(float)(_max-_center);
+    throttle_center = throttle_get_reading();
+    
+    throttle_max = throttle_center;
+    throttle_min = throttle_center;
+
+    float reading = throttle_get_reading();
+    while((throttle_max < throttle_center+20) || (throttle_min > throttle_center-20) || (abs(reading-throttle_center) > 10)) {
+        reading = throttle_get_reading();
+        throttle_min = min(throttle_min, reading);
+        throttle_max = max(throttle_max, reading);
+    }
+}
+
+float throttle_get_raw_throttle() {
+    float value = throttle_get_reading();
+    
+    if(value > throttle_center) {
+        return -(value-throttle_center)/(float)(throttle_max-throttle_center);
     } else {
-        return (1.0-((value-_min)/(float)(_center-_min)));
+        return (1.0-((value-throttle_min)/(float)(throttle_center-throttle_min)));
     }
 }
 
-float Throttle::getThrottle() {
-    float raw = getRawThrottle();
-    if(raw > _deadZone) {
-        return (raw-_deadZone)/(1.0-_deadZone);
-    } else if(raw < -_deadZone) {
-        return (raw+_deadZone)/(1.0-_deadZone);
+float throttle_get_throttle() {
+    float raw = throttle_get_raw_throttle();
+    if(raw > THROTTLE_DEAD_ZONE) {
+        return (raw-THROTTLE_DEAD_ZONE)/(1.0-THROTTLE_DEAD_ZONE);
+    } else if(raw < -THROTTLE_DEAD_ZONE) {
+        return (raw+THROTTLE_DEAD_ZONE)/(1.0-THROTTLE_DEAD_ZONE);
     } else {
         return 0.0;
     }
 }
 
-float Throttle::getReading() {
-    float total = 0;
-    for(int i = 0; i < 10; i++) {
-        total += analogRead(_pin);
-    }
-    float value = total / 10.0;
-    return value;
-}
