@@ -25,6 +25,7 @@ void setup() {
   pinMode(BATTERY_PIN, INPUT);
 
   OLED_init();
+  OLED_draw_splash_screen();
   board_init();
   throttle = new Throttle(A0);
 }
