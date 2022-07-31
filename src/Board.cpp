@@ -1,6 +1,8 @@
 #include "Board.h"
 
-struct board_akc_packet_t {
+unsigned char BOARD_ADDRESS[] = {0xCC, 0x50, 0xE3, 0x3C, 0xA8, 0x89};
+
+struct board_status_packet_t {
     float speed;
     float battery;
 };
@@ -9,65 +11,41 @@ struct board_control_packet_t {
     float throttle;
 };
 
-RF24 *board_radio;
-
 float board_throttle;
 float board_speed;
 float board_battery;
 
 unsigned long board_last_transmit;
 
-const char board_board_addr[6] = "BESK8"; // board address
-const char board_remote_addr[6] = "RESK8"; // remote address
+board_status_packet_t rx_packet;
+board_control_packet_t tx_packet;
+
+void board_on_data(uint8_t * mac, uint8_t *incomingData, uint8_t len) {
+    memcpy(&rx_packet, incomingData, sizeof(rx_packet));
+    board_battery = rx_packet.battery;
+    board_speed = rx_packet.speed;
+}
 
 void board_init() {
-    board_radio = new RF24(7,8);
+    WiFi.mode(WIFI_STA);
 
-    if(!board_radio->begin()) {
-        Serial.println("Radio hardware is not responding!!");
-        while(true) {}
+    if (esp_now_init() != 0) {
+        Serial.println("Error initializing ESP-NOW");
+        while(true) {};
     }
 
-    board_radio->setDataRate(RF24_250KBPS);
-
-    board_radio->setChannel(50);
-
-    board_radio->setPALevel(RF24_PA_LOW);
-
-    board_radio->enableDynamicPayloads();
-
-    board_radio->enableAckPayload();
-
-    board_radio->openWritingPipe((const uint8_t*)&board_board_addr);
-    board_radio->openReadingPipe(1, (const uint8_t*)&board_remote_addr);
-
-    board_radio->stopListening();
-
-    board_radio->printPrettyDetails();
+    esp_now_set_self_role(ESP_NOW_ROLE_COMBO);
+    esp_now_add_peer(BOARD_ADDRESS, ESP_NOW_ROLE_COMBO, 1, NULL, 0);
+    esp_now_register_recv_cb(board_on_data);
 }
 
 void board_update() {
     unsigned long time = millis();
 
     if(time-board_last_transmit > 20) {
-        board_control_packet_t tx_packet;
         tx_packet.throttle = board_throttle;
-        bool ret = board_radio->write(&tx_packet, sizeof(tx_packet));
+        esp_now_send(BOARD_ADDRESS, (uint8_t *)&tx_packet, sizeof(tx_packet));
         board_last_transmit = time;
-        
-        uint8_t pipe;
-        if(ret) {
-            if(board_radio->available(&pipe)) {
-                board_akc_packet_t ack_packet;
-                board_radio->read(&ack_packet, sizeof(ack_packet));
-
-                board_speed = ack_packet.speed;
-                board_battery = ack_packet.battery;
-            }
-        } else {
-            Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-            board_radio->printPrettyDetails();
-        }
     }
 }
 

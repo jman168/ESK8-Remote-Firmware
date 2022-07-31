@@ -24,6 +24,7 @@ void throttle_init() {
         reading = throttle_get_reading();
         throttle_min = min(throttle_min, reading);
         throttle_max = max(throttle_max, reading);
+        delay(1); // keep the watchdog fed or it will reset us!
     }
 }
 
