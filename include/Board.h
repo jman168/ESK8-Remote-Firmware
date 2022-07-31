@@ -36,3 +36,11 @@ float board_get_speed();
  * @return float 
  */
 float board_get_battery();
+
+/**
+ * @brief Gets if two way communication is established with the board.
+ * 
+ * @return true 
+ * @return false 
+ */
+bool board_is_connected();

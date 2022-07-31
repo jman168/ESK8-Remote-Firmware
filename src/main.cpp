@@ -24,5 +24,6 @@ void loop() {
   OLED_set_remote_battery(0.0);
   OLED_set_board_battery(board_get_battery());
   OLED_set_board_speed(board_get_speed());
+  OLED_set_is_connected(board_is_connected());
   OLED_draw_ui();
 }

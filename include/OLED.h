@@ -49,3 +49,10 @@ void OLED_set_remote_battery(float level);
  * @param throttle 
  */
 void OLED_set_throttle(float throttle);
+
+/**
+ * @brief Sets if the board and the remote are connected.
+ * 
+ * @param connected 
+ */
+void OLED_set_is_connected(bool connected);

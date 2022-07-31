@@ -4,6 +4,7 @@ float OLED_board_battery = 0.0;
 float OLED_remote_battery = 0.0;
 float OLED_throttle = 0.0;
 float OLED_board_speed = 0.0;
+bool OLED_is_connected = false;
 
 Adafruit_SSD1306 OLED_display;
 
@@ -42,32 +43,34 @@ void OLED_draw_splash_screen() {
 void OLED_draw_ui() {
     OLED_display.clearDisplay(); // clear buffer
 
-    // board
-    OLED_display.drawRect(52, 13, 64, 4, SSD1306_WHITE);
-    OLED_display.fillRect(53, 14, OLED_board_battery*64, 2, SSD1306_WHITE);
-    OLED_display.fillCircle(60, 20, 4, SSD1306_WHITE);
-    OLED_display.fillCircle(108, 20, 4, SSD1306_WHITE);
-
     // remote battery
     OLED_display.drawRect(0, 0, 6, 4, SSD1306_WHITE);
     OLED_display.drawLine(6, 1, 6, 2, SSD1306_WHITE);
     OLED_display.fillRect(1, 1, OLED_remote_battery*5, 2, SSD1306_WHITE);
 
-    // speed
-    OLED_display.setTextSize(1);
-    OLED_display.setTextColor(SSD1306_WHITE);
-    OLED_display.setCursor(40, 0);
-    if(OLED_board_speed < 9.9499999999999999999) {
+    if(OLED_is_connected || (millis()/500)%2==0) {
+        // board
+        OLED_display.drawRect(52, 13, 64, 4, SSD1306_WHITE);
+        OLED_display.fillRect(53, 14, OLED_board_battery*64, 2, SSD1306_WHITE);
+        OLED_display.fillCircle(60, 20, 4, SSD1306_WHITE);
+        OLED_display.fillCircle(108, 20, 4, SSD1306_WHITE);
+    
+        // speed
+        OLED_display.setTextSize(1);
+        OLED_display.setTextColor(SSD1306_WHITE);
+        OLED_display.setCursor(40, 0);
+        if(OLED_board_speed < 9.9499999999999999999) {
+            OLED_display.print(' ');
+        }
+        OLED_display.print(OLED_board_speed, 1);
         OLED_display.print(' ');
-    }
-    OLED_display.print(OLED_board_speed, 1);
-    OLED_display.print(' ');
-    OLED_display.println("mph");
+        OLED_display.println("mph");
 
-    // speed lines
-    OLED_display.drawLine(15, 14, 45, 14, SSD1306_WHITE);
-    OLED_display.drawLine(10, 17, 40, 17, SSD1306_WHITE);
-    OLED_display.drawLine(15, 20, 45, 20, SSD1306_WHITE);
+        // speed lines
+        OLED_display.drawLine(15, 14, 45, 14, SSD1306_WHITE);
+        OLED_display.drawLine(10, 17, 40, 17, SSD1306_WHITE);
+        OLED_display.drawLine(15, 20, 45, 20, SSD1306_WHITE);
+    }
 
     // throttle display
     OLED_display.drawLine(64, 26, 64, 32, SSD1306_WHITE);
@@ -80,7 +83,7 @@ void OLED_draw_ui() {
         OLED_display.fillRect(64+(OLED_throttle*55), 27, (-OLED_throttle)*55+1, 4, SSD1306_WHITE);
     }
 
-    OLED_display.display(); // show slash screen
+    OLED_display.display(); // display buffer
 }
 
 void OLED_set_board_battery(float level) {
@@ -97,4 +100,8 @@ void OLED_set_throttle(float throttle) {
 
 void OLED_set_board_speed(float speed) {
     OLED_board_speed = speed;
+}
+
+void OLED_set_is_connected(bool connected) {
+    OLED_is_connected = connected;
 }
