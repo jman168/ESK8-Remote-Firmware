@@ -17,13 +17,13 @@ float board_battery;
 
 unsigned long board_last_transmit;
 
-board_status_packet_t rx_packet;
-board_control_packet_t tx_packet;
+board_status_packet_t board_rx_packet;
+board_control_packet_t board_tx_packet;
 
 void board_on_data(uint8_t * mac, uint8_t *incomingData, uint8_t len) {
-    memcpy(&rx_packet, incomingData, sizeof(rx_packet));
-    board_battery = rx_packet.battery;
-    board_speed = rx_packet.speed;
+    memcpy(&board_rx_packet, incomingData, sizeof(board_rx_packet));
+    board_battery = board_rx_packet.battery;
+    board_speed = board_rx_packet.speed;
 }
 
 void board_init() {
@@ -43,8 +43,8 @@ void board_update() {
     unsigned long time = millis();
 
     if(time-board_last_transmit > 20) {
-        tx_packet.throttle = board_throttle;
-        esp_now_send(BOARD_ADDRESS, (uint8_t *)&tx_packet, sizeof(tx_packet));
+        board_tx_packet.throttle = board_throttle;
+        esp_now_send(BOARD_ADDRESS, (uint8_t *)&board_tx_packet, sizeof(board_tx_packet));
         board_last_transmit = time;
     }
 }
