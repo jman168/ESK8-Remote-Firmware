@@ -58,8 +58,11 @@ void OLED_draw_ui() {
         // speed
         OLED_display.setTextSize(1);
         OLED_display.setTextColor(SSD1306_WHITE);
-        OLED_display.setCursor(40, 0);
-        if(OLED_board_speed < 9.9499999999999999999) {
+        OLED_display.setCursor(35, 0);
+        if(abs(OLED_board_speed) < 9.9499999999999999999) {
+            OLED_display.print(' ');
+        }
+        if(OLED_board_speed >= 0.0) {
             OLED_display.print(' ');
         }
         OLED_display.print(OLED_board_speed, 1);
