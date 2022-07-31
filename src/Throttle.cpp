@@ -40,12 +40,21 @@ float throttle_get_raw_throttle() {
 
 float throttle_get_throttle() {
     float raw = throttle_get_raw_throttle();
+    float value;
+
     if(raw > THROTTLE_DEAD_ZONE) {
-        return (raw-THROTTLE_DEAD_ZONE)/(1.0-THROTTLE_DEAD_ZONE);
+        value = (raw-THROTTLE_DEAD_ZONE)/(1.0-THROTTLE_DEAD_ZONE);
     } else if(raw < -THROTTLE_DEAD_ZONE) {
-        return (raw+THROTTLE_DEAD_ZONE)/(1.0-THROTTLE_DEAD_ZONE);
+        value = (raw+THROTTLE_DEAD_ZONE)/(1.0-THROTTLE_DEAD_ZONE);
     } else {
-        return 0.0;
+        value = 0.0;
     }
+
+    if(value > 1.0)
+        value = 1.0;
+    if(value < -1.0)
+        value = -1.0;
+
+    return value;
 }
 
