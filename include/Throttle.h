@@ -3,7 +3,8 @@
 #include <Arduino.h>
 
 #define THROTTLE_PIN A0
-#define THROTTLE_DEAD_ZONE 0.05
+#define THROTTLE_DEAD_ZONE 0.10
+#define THROTTLE_UPPER_LOWER_DEAD_ZONE 0.10
 
 /**
  * @brief Initialized the throttle potentiometer.

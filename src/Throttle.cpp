@@ -50,6 +50,8 @@ float throttle_get_throttle() {
         value = 0.0;
     }
 
+    value = value*(1.0/(1.0-THROTTLE_UPPER_LOWER_DEAD_ZONE)); // throttle upper and lower dead zone
+
     if(value > 1.0)
         value = 1.0;
     if(value < -1.0)
