@@ -3,34 +3,35 @@
 #include <SPI.h>
 #include "RF24.h"
 
-struct AKCPacket {
-    float speed;
-    float battery;
-};
+/**
+ * @brief Initializes radio communication with the board.
+ * 
+ */
+void board_init();
 
-struct ControlPacket {
-    float throttle;
-};
+/**
+ * @brief Sends throttle data, checks buffer for data from the board, etc... 
+ * 
+ */
+void board_update();
 
-class Board {
-    public:
-        Board();
+/**
+ * @brief Sets the board throttle.
+ * 
+ * @param throttle 
+ */
+void board_set_throttle(float throttle);
 
-        void handle();
+/**
+ * @brief Gets the speed of the board in miles per hour.
+ * 
+ * @return float 
+ */
+float board_get_speed();
 
-        void setThrottle(float throttle);
-        float getSpeed();
-        float getBattery();
-
-    private:
-        RF24 *_radio;
-
-        float _throttle;
-        float _speed;
-        float _battery;
-
-        unsigned long _lastTransmit = 0;
-
-        const char _boardAddr[6] = "BESK8"; // board address
-        const char _remoteAddr[6] = "RESK8"; // remote address
-};
+/**
+ * @brief Gets the battery level of the board as a number from 0.0 to 1.0
+ * 
+ * @return float 
+ */
+float board_get_battery();

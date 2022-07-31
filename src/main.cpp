@@ -5,10 +5,6 @@
 
 #define BATTERY_PIN A7
 
-OLED *display;
-Throttle *throttle;
-Board *board;
-
 FILE f_out;
 int sput(char c, __attribute__((unused)) FILE* f) {return !Serial.write(c);}
 
@@ -26,22 +22,23 @@ void setup() {
 
   pinMode(BATTERY_PIN, INPUT);
 
-  display = new OLED();
-  board = new Board();
-  throttle = new Throttle(A0);
+  OLED_init();
+  OLED_draw_splash_screen();
+  board_init();
+  throttle_init();
 }
 
 void loop() {
-  float t = throttle->getThrottle();
+  float t = throttle_get_throttle();
 
-  board->setThrottle(t);
-  board->handle();
+  board_set_throttle(t);
+  board_update();
 
-  display->setThrottle(throttle->getThrottle());
-  display->setRemoteBattery(getBattery());
-  display->setBoardBattery(board->getBattery());
-  display->setSpeed(board->getSpeed());
-  display->drawUI();
+  OLED_set_throttle(t);
+  OLED_set_remote_battery(getBattery());
+  OLED_set_board_battery(board_get_battery());
+  OLED_set_board_speed(board_get_speed());
+  OLED_draw_ui();
 }
 
 float getBattery() {
