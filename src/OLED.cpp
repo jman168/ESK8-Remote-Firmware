@@ -5,6 +5,7 @@ float OLED_remote_battery = 0.0;
 float OLED_throttle = 0.0;
 float OLED_board_speed = 0.0;
 bool OLED_is_connected = false;
+uint8_t OLED_motor_temp = 0;
 
 Adafruit_SSD1306 OLED_display;
 
@@ -73,6 +74,15 @@ void OLED_draw_ui() {
         OLED_display.drawLine(15, 14, 45, 14, SSD1306_WHITE);
         OLED_display.drawLine(10, 17, 40, 17, SSD1306_WHITE);
         OLED_display.drawLine(15, 20, 45, 20, SSD1306_WHITE);
+
+        // motor temp
+        OLED_display.setCursor(104, 0);
+        if(OLED_motor_temp < 100)
+            OLED_display.print(' ');
+        if(OLED_motor_temp < 10)
+            OLED_display.print(' ');
+        OLED_display.print(OLED_motor_temp);
+        OLED_display.println("C");
     }
 
     // throttle display
@@ -103,6 +113,10 @@ void OLED_set_throttle(float throttle) {
 
 void OLED_set_board_speed(float speed) {
     OLED_board_speed = speed;
+}
+
+void OLED_set_motor_temperature(float temp) {
+    OLED_motor_temp = temp;
 }
 
 void OLED_set_is_connected(bool connected) {

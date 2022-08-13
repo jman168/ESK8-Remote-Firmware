@@ -5,6 +5,7 @@ unsigned char BOARD_ADDRESS[] = {0xCC, 0x50, 0xE3, 0x3C, 0xA8, 0x89};
 struct board_status_packet_t {
     float speed;
     float battery;
+    uint8_t motor_temp;
     bool connection;
 };
 
@@ -15,6 +16,7 @@ struct board_control_packet_t {
 float board_throttle;
 float board_speed;
 float board_battery;
+uint8_t board_motor_temp;
 bool board_connection_status = false;
 
 unsigned long board_last_transmit = 0;
@@ -28,6 +30,7 @@ void board_on_data(uint8_t * mac, uint8_t *incomingData, uint8_t len) {
     memcpy(&board_rx_packet, incomingData, sizeof(board_rx_packet));
     board_battery = board_rx_packet.battery;
     board_speed = board_rx_packet.speed;
+    board_motor_temp = board_rx_packet.motor_temp;
     board_connection_status = board_rx_packet.connection;
 }
 
@@ -64,6 +67,10 @@ float board_get_speed() {
 
 float board_get_battery() {
     return (board_is_connected())? board_battery: 0.0;
+}
+
+uint8_t board_get_motor_temperature() {
+    return (board_is_connected())? board_motor_temp: 0;
 }
 
 bool board_is_connected() {

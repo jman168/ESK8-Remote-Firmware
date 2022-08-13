@@ -37,6 +37,13 @@ void OLED_set_board_battery(float level);
 void OLED_set_board_speed(float speed);
 
 /**
+ * @brief Sets the boards temperature in celsius.
+ * 
+ * @param temp 
+ */
+void OLED_set_motor_temperature(float temp);
+
+/**
  * @brief Sets the remotes battery level from 0.0 to 1.0
  * 
  * @param level 

@@ -38,6 +38,13 @@ float board_get_speed();
 float board_get_battery();
 
 /**
+ * @brief Gets the motor temperature in celsius of the board.
+ * 
+ * @return float 
+ */
+uint8_t board_get_motor_temperature();
+
+/**
  * @brief Gets if two way communication is established with the board.
  * 
  * @return true 
