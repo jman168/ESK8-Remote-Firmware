@@ -3,7 +3,7 @@
 #include <Arduino.h>
 
 #define THROTTLE_PIN A0
-#define THROTTLE_DEAD_ZONE 0.10
+#define THROTTLE_DEAD_ZONE 0.15
 #define THROTTLE_UPPER_LOWER_DEAD_ZONE 0.10
 
 /**

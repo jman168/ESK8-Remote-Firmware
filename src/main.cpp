@@ -10,6 +10,8 @@ void setup() {
 
   while(!Serial);
 
+  delay(5000);
+
   OLED_init();
   OLED_draw_splash_screen();
   board_init();

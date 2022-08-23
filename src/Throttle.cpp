@@ -2,26 +2,27 @@
 
 float throttle_min, throttle_center, throttle_max;
 
-float throttle_get_reading() {
-    float total = 0;
-    for(int i = 0; i < 10; i++) {
+float throttle_get_reading(int samples = 20) {
+    double total = 0;
+    for(int i = 0; i < samples; i++) {
         total += analogRead(THROTTLE_PIN);
+        delayMicroseconds(500);
     }
-    float value = total / 10.0;
+    float value = total / (double)samples;
     return value;
 }
 
 void throttle_init() {    
     pinMode(THROTTLE_PIN, INPUT);
     
-    throttle_center = throttle_get_reading();
+    throttle_center = throttle_get_reading(100);
     
     throttle_max = throttle_center;
     throttle_min = throttle_center;
 
-    float reading = throttle_get_reading();
+    float reading = throttle_get_reading(100);
     while((throttle_max < throttle_center+20) || (throttle_min > throttle_center-20) || (abs(reading-throttle_center) > 10)) {
-        reading = throttle_get_reading();
+        reading = throttle_get_reading(100);
         throttle_min = min(throttle_min, reading);
         throttle_max = max(throttle_max, reading);
         delay(1); // keep the watchdog fed or it will reset us!
