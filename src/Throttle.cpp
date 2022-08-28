@@ -1,6 +1,8 @@
 #include "Throttle.h"
 
 float throttle_min, throttle_center, throttle_max;
+float last_raw = 0.0;
+
 
 float throttle_get_reading(int samples = 20) {
     double total = 0;
@@ -41,6 +43,8 @@ float throttle_get_raw_throttle() {
 
 float throttle_get_throttle() {
     float raw = throttle_get_raw_throttle();
+    raw = last_raw*0.7 + raw*0.3;
+    last_raw = raw;
     float value;
 
     if(raw > THROTTLE_DEAD_ZONE) {
