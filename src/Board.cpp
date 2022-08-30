@@ -74,5 +74,5 @@ uint8_t board_get_motor_temperature() {
 }
 
 bool board_is_connected() {
-    return (millis() - board_last_receive < 100) && (board_connection_status);
+    return (millis() - board_last_receive < 250) && (board_connection_status);
 }
